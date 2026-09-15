@@ -2,6 +2,12 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+
+// Grok broker OAuth only works on *.grok-sandbox.com — hide those buttons
+// on production Vercel (they'll fail with "Invalid redirect URI").
+const isSandbox =
+  typeof window !== "undefined" &&
+  window.location.hostname.endsWith(".grok-sandbox.com");
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,7 +50,7 @@ function Login() {
             : "90 minutes at a time. Someone else has to say they saw you. If they don't, it doesn't count."}
         </p>
         <div className="mt-5 flex flex-col gap-2">
-          {authEnabled ? (
+        {authEnabled && isSandbox ? (
             GROK_PROVIDERS.map((p, i) => (
               <button
                 key={p.providerId}
