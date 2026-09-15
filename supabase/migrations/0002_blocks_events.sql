@@ -40,6 +40,7 @@ create index if not exists blocks_start_time_idx      on public.blocks (start_ti
 alter table public.blocks enable row level security;
 
 -- 1. Clients (block owners) have full read access to their own blocks.
+drop policy if exists "blocks_client_select" on public.blocks;
 create policy "blocks_client_select"
   on public.blocks
   for select
@@ -47,6 +48,7 @@ create policy "blocks_client_select"
   using (client_id = auth.uid());
 
 -- 2. Clients can start new blocks.
+drop policy if exists "blocks_client_insert" on public.blocks;
 create policy "blocks_client_insert"
   on public.blocks
   for insert
@@ -54,6 +56,7 @@ create policy "blocks_client_insert"
   with check (client_id = auth.uid());
 
 -- 3. Clients can perform all status transitions on their own blocks.
+drop policy if exists "blocks_client_update" on public.blocks;
 create policy "blocks_client_update"
   on public.blocks
   for update
@@ -62,6 +65,7 @@ create policy "blocks_client_update"
   with check (client_id = auth.uid());
 
 -- 4. Confirmers can read blocks assigned to them.
+drop policy if exists "blocks_confirmer_select" on public.blocks;
 create policy "blocks_confirmer_select"
   on public.blocks
   for select
@@ -69,6 +73,7 @@ create policy "blocks_confirmer_select"
   using (confirmer_email = lower(auth.jwt() ->> 'email'));
 
 -- 5. Backups can read blocks where they are listed as backup.
+drop policy if exists "blocks_backup_select" on public.blocks;
 create policy "blocks_backup_select"
   on public.blocks
   for select
@@ -80,6 +85,7 @@ create policy "blocks_backup_select"
 --    rejected by the with check clause. Prefer calling the confirm_block() RPC
 --    (0003_confirm_rpc.sql) which enforces this atomically in a SECURITY DEFINER
 --    function, but this policy also gates direct UPDATE attempts.
+drop policy if exists "blocks_confirmer_update" on public.blocks;
 create policy "blocks_confirmer_update"
   on public.blocks
   for update
@@ -108,6 +114,7 @@ create index if not exists events_block_id_idx on public.events (block_id);
 alter table public.events enable row level security;
 
 -- Events are readable by anyone who can see the parent block.
+drop policy if exists "events_select_via_block" on public.events;
 create policy "events_select_via_block"
   on public.events
   for select
@@ -125,6 +132,7 @@ create policy "events_select_via_block"
   );
 
 -- Clients may insert standard client-side event types on their own blocks.
+drop policy if exists "events_client_insert" on public.events;
 create policy "events_client_insert"
   on public.events
   for insert
@@ -139,6 +147,7 @@ create policy "events_client_insert"
   );
 
 -- Confirmers may only insert CONFIRMED events on blocks assigned to them.
+drop policy if exists "events_confirmer_insert" on public.events;
 create policy "events_confirmer_insert"
   on public.events
   for insert

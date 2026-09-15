@@ -19,6 +19,7 @@ create table if not exists public.profiles (
 alter table public.profiles enable row level security;
 
 -- Authenticated users can only read their own profile.
+drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own"
   on public.profiles
   for select
@@ -26,6 +27,7 @@ create policy "profiles_select_own"
   using (id = auth.uid());
 
 -- Authenticated users can only update their own profile.
+drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own"
   on public.profiles
   for update
@@ -35,6 +37,7 @@ create policy "profiles_update_own"
 
 -- The auto-insert trigger (below) fires as the service role, so the inserting
 -- policy grants the service role insert access — not end users directly.
+drop policy if exists "profiles_insert_service" on public.profiles;
 create policy "profiles_insert_service"
   on public.profiles
   for insert
