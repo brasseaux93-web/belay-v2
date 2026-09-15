@@ -11,7 +11,7 @@ import { ProtocolGuide } from "@/components/protocol-guide";
 import { StatusPip } from "@/components/status-pip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { backupDarkInvite, confirmerInvite, copyText } from "@/lib/belay/copy";
+import { backupDarkInvite, confirmerInvite, copyText, shareConfirmLink } from "@/lib/belay/copy";
 import { clientAction, startBlock } from "@/lib/belay/actions";
 import {
   formatCountdown,
@@ -51,6 +51,13 @@ async function copyInvite(email: string) {
   const ok = await copyText(confirmerInvite(email, window.location.origin));
   if (ok) toast("Text copied. Send it to whoever is checking.");
   else toast.error("Could not copy");
+}
+
+async function shareConfirmLinkAction(blockId: string) {
+  const result = await shareConfirmLink(blockId, window.location.origin);
+  if (result === "shared") toast("Shared. They'll land right on your block.");
+  else if (result === "copied") toast("Link copied. Paste it to your confirmer.");
+  else toast.error("Could not share or copy the link.");
 }
 
 async function copyBackup(block: Block) {
@@ -427,6 +434,14 @@ function ClientHome() {
               onClick={() => void copyInvite(active.confirmerEmail)}
             >
               Copy a text for them
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-11 w-full"
+              onClick={() => void shareConfirmLinkAction(active.id)}
+            >
+              Share confirmation link
             </Button>
           </div>
         )}

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -14,7 +14,12 @@ import { listLabel, confirmLabel, pipTone } from "@/lib/belay/labels";
 import { useBlocks } from "@/hooks/use-blocks";
 import type { Block } from "@/lib/belay/types";
 
-export const Route = createFileRoute("/confirm")({ component: ConfirmPage });
+export const Route = createFileRoute("/confirm")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    block_id: typeof s.block_id === "string" ? s.block_id : undefined,
+  }),
+  component: ConfirmPage,
+});
 
 function ConfirmPage() {
   return (
@@ -39,8 +44,14 @@ async function copyBackup(block: Block) {
 function ConfirmView() {
   const { toConfirm, now, loading, error, refresh, setBlocks, user } = useBlocks();
   const [busyId, setBusyId] = useState<string | null>(null);
-  const queue = toConfirm;
+  const { block_id } = Route.useSearch();
+  const navigate = useNavigate({ from: "/confirm" });
+  const queue = block_id ? toConfirm.filter((b) => b.id === block_id) : toConfirm;
   const email = user?.primaryEmail?.trim().toLowerCase() ?? "";
+
+  function clearFilter() {
+    void navigate({ search: {} });
+  }
 
   if (loading) {
     return <div className="h-48 animate-pulse rounded-lg border border-border bg-surface" />;
@@ -64,6 +75,19 @@ function ConfirmView() {
       </div>
 
       {error ? <p className="mb-4 text-sm text-bad">{error}</p> : null}
+
+      {block_id ? (
+        <div className="mb-4 flex items-center justify-between rounded-md border border-border bg-surface px-3 py-2 text-sm text-muted">
+          <span>Showing linked block</span>
+          <button
+            type="button"
+            onClick={clearFilter}
+            className="ml-4 text-xs font-medium text-fg underline-offset-2 hover:underline"
+          >
+            See all
+          </button>
+        </div>
+      ) : null}
 
       {queue.length === 0 ? (
         <Panel className="px-5 py-12 text-center">

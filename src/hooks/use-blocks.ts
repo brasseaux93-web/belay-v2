@@ -3,12 +3,12 @@ import { listMyBlocks, listMyEvents } from "@/lib/belay/actions";
 import { applyClock, endTime, isOpenBlock } from "@/lib/belay/clock";
 import { notify } from "@/lib/belay/notify";
 import type { Block, EventRow } from "@/lib/belay/types";
-import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { useCurrentUserState } from "@/lib/auth/use-current-user";
 
 type Snap = { status: Block["status"]; pauseUntil: number | null };
 
 export function useBlocks() {
-  const user = useCurrentUser();
+  const { user, isPending } = useCurrentUserState();
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [events, setEvents] = useState<EventRow[]>([]);
   const [now, setNow] = useState(() => Date.now());
@@ -31,8 +31,14 @@ export function useBlocks() {
     }
   }, []);
 
+  // Once the session resolves, either fetch data (signed in) or clear loading (signed out).
   useEffect(() => {
-    if (!user) return;
+    if (isPending) return;
+    if (!user) {
+      // Definitely signed out — stop showing the loading skeleton immediately.
+      setLoading(false);
+      return;
+    }
     void refresh();
     const tick = setInterval(() => setNow(Date.now()), 1000);
     const poll = setInterval(() => void refresh(), 8000);
@@ -40,7 +46,7 @@ export function useBlocks() {
       clearInterval(tick);
       clearInterval(poll);
     };
-  }, [user, refresh]);
+  }, [isPending, user, refresh]);
 
   const viewed = useMemo(
     () => blocks.map((b) => applyClock(b, now).block),
@@ -102,6 +108,7 @@ export function useBlocks() {
     recentBackups,
     now,
     loading,
+    isPending,
     error,
     refresh,
     setBlocks,
