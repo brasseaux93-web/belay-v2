@@ -1,0 +1,1 @@
+import{c as e}from"./index-PNPlF-4X.js";import{a as t}from"./button-D770yK0Z.js";var n=e();function r({className:e,...r}){return(0,n.jsx)(`input`,{className:t(`h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none placeholder:text-faint transition-[border-color] duration-150 focus:border-accent disabled:opacity-40`,e),...r})}export{r as t};

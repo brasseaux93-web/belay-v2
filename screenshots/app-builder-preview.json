@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "BELAY",
+      "hasCanvas": false,
+      "bodyTextLen": 214,
+      "bodyTextHash": "3c03a3c1fb9c35929affc2dfe28a3470974e4840eb83391b48d12399009a9d3a",
+      "bodyTextPrefix": "BELAY Sign in A 90-minute check-in. A second person has to confi",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "BELAY",
+      "hasCanvas": false,
+      "bodyTextLen": 214,
+      "bodyTextHash": "3c03a3c1fb9c35929affc2dfe28a3470974e4840eb83391b48d12399009a9d3a",
+      "bodyTextPrefix": "BELAY Sign in A 90-minute check-in. A second person has to confi",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

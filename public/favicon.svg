@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="BELAY">
+  <rect width="32" height="32" fill="#000000"/>
+  <!-- Geometric B: stem + two stacked D-bowls, counters as belay-device rope slots -->
+  <path fill="#EDEDED" fill-rule="evenodd" d="
+    M7 5h10.2c3.05 0 5.5 2.35 5.5 5.25 0 1.72-.86 3.24-2.18 4.18
+    C22.05 15.4 23.2 17.1 23.2 19.15 23.2 22.35 20.5 25 17.15 25H7V5Z
+    M11.15 8.15v4.2h5.55c1.22 0 2.2-.92 2.2-2.1 0-1.18-.98-2.1-2.2-2.1H11.15Z
+    M11.15 16.65v5.2h5.95c1.4 0 2.55-1.08 2.55-2.6 0-1.52-1.15-2.6-2.55-2.6H11.15Z
+  "/>
+  <rect x="24.2" y="24.2" width="4.2" height="4.2" rx="0.6" fill="#0070F3"/>
+</svg>
